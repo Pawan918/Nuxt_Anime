@@ -4,11 +4,11 @@
             <div class="hidden bg-no-repeat bg-cover bg-center  lg:block lg:w-1/2  bg-[url('/login.avif')]">
             </div>
             <div class="w-full lg:w-1/2 flex justify-center items-center bg-white flex-col gap-4 tracking-wider">
-                <UForm  :validate="validate" :state="state" @submit="onSubmit"
-                    @error="onError">
+                <UForm  :validate="validate" :state="state" @submit="onSubmit" @error="onError">
                     <div class="flex flex-col gap-4">
                         <div class="max-w-[250px] text-center text-xl font-semibold">Join Anikitsu for Free Anime Streaming</div>
-                        <UButton label="Continue with Google" size="lg" class="flex justify-center font-bold leading-7 text-black tracking-wider" variant="outline" icon="i-mdi-google"/>
+                        <UButton label="Continue with Google" size="lg" class="flex justify-center font-bold leading-7 text-black tracking-wider" 
+                            variant="outline" icon="i-mdi-google" @click="siginWithGoogle" :disabled="true"/>
                         <span class="mx-auto">or</span>
                         <UFormGroup name="name" v-if="isSignIn">
                             <UInput v-model="state.name" placeholder="Name" color="blue" size="lg" icon="i-mdi-user"
@@ -59,17 +59,8 @@ const state = ref({
     confirmPassword: undefined,
 })
 
-// const authStore = useAuthStore();
-// const email = ref("");
-// const password = ref("");
-// const confirmPassword = ref("")
-// const name = ref("");
-// const router = useRouter();
-
-// const adminOptions = [ "admin", "guest"];
-// const adminSelected = ref("");
-
-const imgUrl = 'https://plus.unsplash.com/premium_photo-1681487814165-018814e29155?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+const authStore = useAuthStore();
+const router = useRouter();
 
 const onError = async (event) => {
     const element = document.getElementById(event.errors[0].id)
@@ -80,35 +71,23 @@ const validate = () => {
     const errors = []
     if (!state.value.email || !state.value.email.includes('@gmail.com')) errors.push({ path: 'email', message: 'Valid Email Required' })
     if (!state.value.password || state.value.password.length < 8) errors.push({ path: 'password', message: 'Must be at least 8 characters' })
-    if (isSignIn && (!state.value.confirmPassword || state.value.confirmPassword !== state.value.password)) errors.push({ path: 'confirmPassword', message: 'password mismatch' })
+    if (isSignIn.value && (!state.value.confirmPassword || state.value.confirmPassword !== state.value.password)) errors.push({ path: 'confirmPassword', message: 'password mismatch' })
     return errors
 }
 
 const onSubmit = async (event) => {
-    console.log(event.data)
+    const authentication = isSignIn.value ? authStore.signIn : authStore.logIn;
+    const user = await authentication(event.data);
+    if (user.status === 200) {
+        router.push("/");
+    }
+    toast.add({ title : user.message})
 }
-
-const loginHandler = async () => {
-    console.log('login')
-    //     if(email === "" || password === ""){
-    //         toast.add({ title: "Enter all fields to signup"})
-    //     }
-    //     const user = await authStore.logIn(email.value, password.value);
-    //     if (user.status === 200) {
-    //         router.push("/dashboard");
-    //     }
-    //     toast.add({ title : user.message})
-
-};
-const siginHandler = async () => {
-    console.log('sigin')
-    //     if(email === "" || password === "" || adminSelected === ""){
-    //         toast.add({ title: "Enter all fields to signup"})
-    //     }
-    //     const user = await authStore.signIn(email.value, password.value, adminSelected.value, name.value);
-    //     if (user.status === 200) {
-    //         router.push("/dashboard");
-    //     }
-};
-
+const siginWithGoogle = async()=>{
+    const user = await authStore.googleSigin();
+    if (user.status === 200) {
+        router.push("/");
+    }
+    toast.add({ title : user.message})
+}
 </script>

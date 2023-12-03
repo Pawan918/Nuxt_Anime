@@ -4,6 +4,9 @@ export default defineNuxtConfig({
     preference : 'light'
   },
   modules: ['@pinia/nuxt', '@nuxt/ui', "@nuxt/image"],
+  pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },
   ui: {
     global: true,
     icons: ['mdi']
