@@ -6,9 +6,11 @@
 </template>
 <script setup >
 const userStore = useUserStore();
+const authStore = useAuthStore();
+const router = useRouter();
 const { isLoggedIn } = storeToRefs(userStore)
 const loginHandler = ()=>{
-  isLoggedIn.value = true;
+  router.push('/login');
 }
 
 </script>

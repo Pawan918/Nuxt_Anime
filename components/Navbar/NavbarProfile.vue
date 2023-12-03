@@ -23,13 +23,21 @@
 </template>
 <script setup>
 const userStore = useUserStore();
-const { isLoggedIn } = storeToRefs(userStore)
-const logoutHandler = ()=>{
-    isLoggedIn.value = false;
+const authStore = useAuthStore()
+const router = useRouter();
+const toast = useToast();
+const { userDetails } = storeToRefs(userStore)
+
+const logoutHandler = async()=>{
+    const user = await authStore.signOutUser();
+    if(user.status == 200){
+      router.push("/login");
+    }
+    toast.add({ title : user.message})
 }
 const items = [
   [{
-    label: 'ben@example.com',
+    label: userDetails.value.email,
     slot: 'account',
     disabled: true
   }], [{
