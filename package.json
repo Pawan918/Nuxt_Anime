@@ -22,6 +22,7 @@
     "@iconify-json/mdi": "^1.1.58",
     "@nuxt/ui": "^2.11.0",
     "@pinia/nuxt": "^0.5.1",
+    "@videojs-player/vue": "^1.0.0",
     "firebase": "^10.7.0",
     "npm": "^10.2.4",
     "pinia": "^2.1.7"
