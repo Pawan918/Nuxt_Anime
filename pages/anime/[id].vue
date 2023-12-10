@@ -1,12 +1,18 @@
 <template>
-    <div class="bg-[#1b1a1a] px-6 pt-5">
+    <div class="bg-[#1b1a1a] px-6 pt-5 ">
         <ClientOnly>
             <VideoPlayer :src="src" class="mb-5"/>
         </ClientOnly>  
-        <USelect v-model="selectValue" :options="selectOption" class="w-44 text-white mb-5" color="rose" variant="outline" option-attribute="name"/>
+        <USelect v-model="selectValue" 
+            :options="selectOption" 
+            class="w-36 text-white mb-5" 
+            color="rose" 
+            variant="outline"
+            option-attribute="name"
+            :ui="{  color:{rose : { outline : 'text-[red] bg-[#2a2a2a] focus:ring-0 dark:focus:ring-0'}},gap:'gap-y-1'}"/>
         <div class="flex gap-3 flex-wrap w-3/5">
             <div v-for="(episode, index) in currentEpisodes" :key="index">
-                <UButton :label="`${index + 1}`" variant="outline" @click="changeEpisode(episode.id)" color="rose" class="w-12 flex justify-center items-center"/>
+                <UButton :label="`${episode.number}`" variant="outline" @click="changeEpisode(episode.id)" color="rose" class="w-12 flex justify-center items-center"/>
             </div>
         </div> 
         <div class="text-white flex mt-4 gap-8">
@@ -28,7 +34,7 @@ const id = route.params.id;
 const { data: animeInfo } = await useFetch(`https://api-amvstrm.nyt92.eu.org/api/v2/info/${id}`)
 const { data: animeEpisodes } = await useFetch(`https://api-amvstrm.nyt92.eu.org/api/v2/episode/${id}`);
 const src = ref('how')
-const selectValue = ref(1)
+const selectValue = ref(0)
 
 const loop = (times)=>{
     const arr = [];
@@ -45,19 +51,15 @@ const selectOption = computed(()=>{
     const arr = loop(value);
     return arr;
 })
-const currentEpisodes = computed(()=>{
+const currentEpisodes = ref([]);
+watch(selectValue,()=>{
     let arr = [];
-    console.log('hello');
-    for(let i=(selectValue.value*100);i<((selectValue.value + 1)*100);i++){
+    for(let i=(selectValue.value*100);i < animeEpisodes.value.episodes.length && i<(selectValue.value*100)+100 ;i++){
+        console.log(i)
         arr.push(animeEpisodes.value.episodes[i])
     }
-    return arr;
-})
-console.log(selectValue.value);
-console.log(currentEpisodes.value);
-// console.log(selectOption.value)
-// console.log(animeInfo)
-// console.log(animeEpisodes.value.episodes[0])
+    currentEpisodes.value = arr;
+},{immediate : true})
 const changeEpisode = (episode) => {
 
 }

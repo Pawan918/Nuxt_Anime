@@ -1,6 +1,6 @@
 <template>
     <UContainer class="bg-stone-800 py-8 max-w-none">
-        <UCard :ui="{ body: { base: 'flex ' } }">
+        <UCard :ui="{ body: { base: 'flex' } }">
             <div class="hidden bg-no-repeat bg-cover bg-center  lg:block lg:w-1/2  bg-[url('/login.avif')]">
             </div>
             <div class="w-full lg:w-1/2 flex justify-center items-center bg-white flex-col gap-4 tracking-wider">
