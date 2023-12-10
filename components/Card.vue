@@ -1,6 +1,6 @@
 <template>
     <UCard :ui="{body : {padding : 'px-0 py-0 sm:p-0'},ring : 'ring-0'}" class=" relative bg-[#1b1a1a] text-white" @click="cardHandler">
-        <NuxtImg :src="data?.coverImage.extraLarge" class="min-w-full  max-h-60 overflow-hidden rounded-md" alt="Card Image"/>
+        <NuxtImg :src="data?.coverImage.extraLarge" class="min-w-full  max-h-60 overflow-hidden rounded-md" alt="Card Image" densities="x1 x2" quality="80" loading="lazy"/>
         <p class="pt-0 text-sm text-center font-medium tracking-wider"> 
             {{truncate(data.title.english || data.title.userPreferred || data.title.romaji ,35)}}
         </p>

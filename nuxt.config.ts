@@ -18,4 +18,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  plugins : [
+    {
+      src:'~/plugins/videoPlayer.js',mode:'client',
+    }
+  ]
 })
