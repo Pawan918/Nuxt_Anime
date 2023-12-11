@@ -1,41 +1,36 @@
 <template>
     <div class="bg-[#1b1a1a] px-6 pt-5 ">
         <ClientOnly>
-            <VideoPlayer :src="src" class="mb-5"/>
+            <VideoPlayer :episodeId="episodeId" :poster="poster" class="mb-5"/>
         </ClientOnly>  
         <USelect v-model="selectValue" 
             :options="selectOption" 
-            class="w-36 text-white mb-5" 
+            class="w-36 text-white mb-5 " 
             color="rose" 
             variant="outline"
             option-attribute="name"
             :ui="{  color:{rose : { outline : 'text-[red] bg-[#2a2a2a] focus:ring-0 dark:focus:ring-0'}},gap:'gap-y-1'}"/>
-        <div class="flex gap-3 flex-wrap w-3/5">
+        <div class="flex gap-3 flex-wrap w-full lg:w-3/5 ">
             <div v-for="(episode, index) in currentEpisodes" :key="index">
-                <UButton :label="`${episode.number}`" variant="outline" @click="changeEpisode(episode.id)" color="rose" class="w-12 flex justify-center items-center"/>
+                <UButton 
+                    :label="`${episode.number}`"
+                     variant="outline" 
+                     @click="changeEpisode(episode.id)" color="rose" 
+                     class="w-12 flex justify-center items-center"
+                     />
             </div>
         </div> 
-        <div class="text-white flex mt-4 gap-8">
-            <NuxtImg :src="animeInfo?.coverImage?.large" alt="Card" class="h-56"/>
-            <div class="">
-                <div class="text-xl">{{truncate(animeInfo.title.english || animeInfo.title.userPreferred || animeInfo.title.romaji ,35)}}</div>
-                <div class="text-sm flex gap-2 mt-2 text-gray-500">
-                    <span class="bg-[red] px-1 py-0.5 rounded-md text-white">{{ animeInfo?.format }}</span>
-                    <span class="border-[1px] px-2">PG 13</span>
-                    <span class="border-[1px] px-2">HD</span>
-                </div>
-            </div>
-        </div>
+        <AnimeDetailsSection/>
     </div>
 </template>
 <script setup>
 const route = useRoute()
 const id = route.params.id;
-const { data: animeInfo } = await useFetch(`https://api-amvstrm.nyt92.eu.org/api/v2/info/${id}`)
-const { data: animeEpisodes } = await useFetch(`https://api-amvstrm.nyt92.eu.org/api/v2/episode/${id}`);
-const src = ref('how')
 const selectValue = ref(0)
-
+const episodeId = ref(null)
+const poster = ref('')
+const { data: animeEpisodes } = await useFetch(`https://api-amvstrm.nyt92.eu.org/api/v2/episode/${id}`);
+ episodeId.value = animeEpisodes.value.episodes[0].id
 const loop = (times)=>{
     const arr = [];
     [...Array(times)].forEach((item , i)=>{
@@ -55,12 +50,11 @@ const currentEpisodes = ref([]);
 watch(selectValue,()=>{
     let arr = [];
     for(let i=(selectValue.value*100);i < animeEpisodes.value.episodes.length && i<(selectValue.value*100)+100 ;i++){
-        console.log(i)
         arr.push(animeEpisodes.value.episodes[i])
     }
     currentEpisodes.value = arr;
 },{immediate : true})
 const changeEpisode = (episode) => {
-
+    episodeId.value = episode;
 }
 </script>
