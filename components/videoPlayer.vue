@@ -1,7 +1,6 @@
 <template>
     <VueVideoPlayer
-        src="https://www041.vipanicdn.net/streamhls/7f8dd00fcdec4483b9ff13f47a3ec4e2/ep.1.1696001423.m3u8"
-        poster="https://s4.anilist.co/file/anilistcdn/media/anime/banner/21-wf37VakJmZqs.jpg"
+        :src="src"
         controls
         :loop="true"
         :volume="0.6"
@@ -9,23 +8,23 @@
         preload="metadata"
         :responsive="true"
         class="w-auto lg:w-3/5"
+        :height="400"
     />
 </template>
 <script setup>
 import 'video.js/dist/video-js.css'
 const { $VueVideoPlayer } = useNuxtApp()
 const props = defineProps({
-    src : {
+    episodeId : {
         type : String,
         required : true,
-    },
-    poster : {
-        type : String,
-        required : false,
     }
 })
-console.log(props.src)
-// console.log(object)
+const src = ref('')
+watch(()=>props.episodeId,async()=>{
+    const { data } = await useFetch(`https://anbuanime.onrender.com/vidcdn/watch/${props.episodeId}`)
+    src.value = data.value?.sources[0]?.file
+},{immediate : true})
 </script>
 <style scoped >
 :deep(.vjs-big-play-button){
