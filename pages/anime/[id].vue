@@ -1,15 +1,18 @@
 <template>
-    <div class="bg-[#1b1a1a] px-6 pt-5 ">
+    <div class="bg-[#1b1a1a] px-6 pt-5">
         <ClientOnly>
             <VideoPlayer :episodeId="episodeId" :poster="poster" class="mb-5"/>
-        </ClientOnly>  
-        <USelect v-model="selectValue" 
-            :options="selectOption" 
-            class="w-36 text-white mb-5 " 
-            color="rose" 
-            variant="outline"
-            option-attribute="name"
-            :ui="{  color:{rose : { outline : 'text-[red] bg-[#2a2a2a] focus:ring-0 dark:focus:ring-0'}},gap:'gap-y-1'}"/>
+        </ClientOnly> 
+        <div class="flex justify-between w-3/5">
+            <USelect v-model="selectValue" 
+                :options="selectOption" 
+                class="w-36 text-white mb-5 " 
+                color="rose" 
+                variant="outline"
+                option-attribute="name"
+                :ui="{  color:{rose : { outline : 'text-[red] bg-[#2a2a2a] focus:ring-0 dark:focus:ring-0'}},gap:'gap-y-1'}"/>
+            <UButton class="h-11 flex justify-center bg-[#ea4646] hover:bg-[#c34242]" disable icon="i-mdi-youtube" size="md">Trailer</UButton>
+        </div> 
         <div class="flex gap-3 flex-wrap w-full lg:w-3/5 ">
             <div v-for="(episode, index) in currentEpisodes" :key="index">
                 <UButton 
@@ -57,4 +60,7 @@ watch(selectValue,()=>{
 const changeEpisode = (episode) => {
     episodeId.value = episode;
 }
+console.log(animeEpisodes.value);
+// const youtubeVideoId = ref(an)
+// const youtubeBaseUrl = `https://www.youtube.com/watch?v=${}`
 </script>
