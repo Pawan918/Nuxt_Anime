@@ -7,7 +7,7 @@
         :playbackRates =[0.5,1,1.5,2]
         preload="metadata"
         :responsive="true"
-        class="w-auto lg:w-3/5"
+        class="w-auto"
         :height="400"
     />
 </template>

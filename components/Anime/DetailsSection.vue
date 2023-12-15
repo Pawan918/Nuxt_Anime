@@ -1,11 +1,13 @@
 <template>
     <ClientOnly>
-        <div class="">
+        <div v-if="animeInfo?.relation.length" class="mt-3">
             <h1 class="mt-3 text-xl text-slate-200">More Seasons</h1>
-            <div v-for="(relation,index) in animeInfo?.relation" :key="index">
-                <span v-if="relation?.type === 'ANIME'">
-                    <NuxtImg :src="relation?.coverImage?.medium" alt="episode Image"/>
-                </span>
+            <div class="flex gap-4">
+                <template v-for="(relation,index) in animeInfo?.relation" :key="index">
+                    <span v-if="relation?.type === 'ANIME'" >
+                        <NuxtImg :src="relation?.coverImage?.large" alt="episode Image" class="cursor-pointer max-w-[150px]" @click="animeRelations(relation?.id)"/>
+                    </span>
+                </template>
             </div>
         </div>
         <div class="text-white flex mt-4 gap-8">
@@ -111,11 +113,16 @@
 </template>
 <script setup>
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id;
 const { data: animeInfo } = await useFetch(
     `https://api-amvstrm.nyt92.eu.org/api/v2/info/${id}`
 );
 console.log(animeInfo.value);
+const animeRelations = (episodeId)=>{
+    console.log(episodeId);
+    router.push(`/anime/${episodeId}`)
+}
 </script>
 <style scoped>
 :deep(br + br) {
